@@ -1,0 +1,46 @@
+HOW TO START THIS BOT ON WINDOWS
+================================
+
+Your home folder (C:\Users\shawa) is NOT the bot.
+You must clone the GitHub repo first. PowerShell errors like
+"Cannot find path C:\Users\shawa\Ai-bot" mean the folder was never created.
+
+0) Install Git if "git" is not recognized:
+   winget install --id Git.Git -e --source winget
+   Then close PowerShell and open a new one.
+
+1) Clone the bot (creates C:\Users\shawa\Ai-bot):
+
+   cd C:\Users\shawa
+   git clone https://github.com/paraflix246-pixel/Ai-bot.git
+   cd Ai-bot
+
+   If GitHub asks you to sign in, do that, then run the clone again.
+
+2) First-time setup (Python venv + packages + .env):
+
+   .\setup_windows.bat
+
+   Fill in .env (Rithmic for MNQ futures):
+     BROKER_TYPE=rithmic
+     ASSET_CLASS=futures
+     RITHMIC_USER_ID=...
+     RITHMIC_PASSWORD=...
+     RITHMIC_SYSTEM=...
+
+3) Start MNQ live (real orders):
+
+   cd C:\Users\shawa\Ai-bot
+   .\start_mnq_live.bat
+
+   Or without the .bat file:
+
+   .\venv\Scripts\python.exe -u start_live_rithmic.py --symbol MNQ
+
+   Paper (no live orders):
+
+   .\venv\Scripts\python.exe -u start_live_rithmic.py --symbol MNQ --paper
+
+If you already cloned the repo somewhere else, find it:
+
+   Get-ChildItem C:\Users\shawa -Filter start_live_rithmic.py -Recurse -ErrorAction SilentlyContinue | Select-Object FullName

@@ -2,9 +2,12 @@
 REM ============================================================
 REM  Live MNQ trading via Rithmic (Tradesea/Lucid)
 REM
-REM  Run this FROM the bot folder (or double-click it in Explorer).
-REM  PowerShell example:
-REM    cd C:\Users\shawa\Ai-bot
+REM  Run this FROM the cloned bot folder (or double-click it in Explorer).
+REM  If C:\Users\shawa\Ai-bot does not exist, clone first:
+REM    cd C:\Users\shawa
+REM    git clone https://github.com/paraflix246-pixel/Ai-bot.git
+REM    cd Ai-bot
+REM    .\setup_windows.bat
 REM    .\start_mnq_live.bat
 REM ============================================================
 
