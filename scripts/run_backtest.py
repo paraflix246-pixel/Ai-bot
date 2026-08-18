@@ -55,7 +55,10 @@ def fetch_historical_data(pair, start_date=None, end_date=None, interval='5m', n
     if os.path.exists(csv_filename):
         try:
             df = pd.read_csv(csv_filename)
-            df['datetime'] = pd.to_datetime(df['datetime'])
+            df['datetime'] = pd.to_datetime(df['datetime'], utc=True, errors='coerce')
+            df = df.dropna(subset=['datetime'])
+            # Backtest engine compares naive timestamps; store UTC-naive
+            df['datetime'] = df['datetime'].dt.tz_convert('UTC').dt.tz_localize(None)
 
             if start_date:
                 df = df[df['datetime'] >= pd.to_datetime(start_date)]
