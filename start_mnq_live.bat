@@ -16,6 +16,11 @@ title AI Trading Bot - MNQ LIVE
 cd /d "%~dp0"
 
 set PYTHONUNBUFFERED=1
+set ASSET_CLASS=futures
+set BROKER_TYPE=rithmic
+set TRADING_PAIRS=MNQ
+set TF_ENABLE_ONEDNN_OPTS=0
+set TF_CPP_MIN_LOG_LEVEL=2
 
 if not exist logs mkdir logs
 

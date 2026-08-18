@@ -34,8 +34,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dotenv import load_dotenv
 load_dotenv()
 
+# This script always trades CME micros via Rithmic. Force this BEFORE importing
+# strategy_config (via EnsembleTrader), otherwise a leftover ASSET_CLASS=forex
+# in .env loads EUR/USD instead of MES/MNQ.
+os.environ['ASSET_CLASS'] = 'futures'
+os.environ['BROKER_TYPE'] = 'rithmic'
+
 from src.broker.rithmic_connector import RithmicConnector
-from src.core.ensemble_trader import EnsembleTrader
 from src.ai.technical_analyzer import TechnicalAnalyzer
 from src.utils.logger import bot_logger, trades_logger
 
@@ -114,8 +119,8 @@ class LiveRithmicTrader:
         # Broker connector
         self.broker: Optional[RithmicConnector] = None
         
-        # Full AI ensemble system
-        self.ensemble: Optional[EnsembleTrader] = None
+        # Full AI ensemble system (imported in connect() so .env/symbol env is applied first)
+        self.ensemble = None
         self.technical = TechnicalAnalyzer()
         
         # Log file
@@ -133,6 +138,7 @@ class LiveRithmicTrader:
                 
                 # Initialize full AI ensemble without broker
                 print("\n🧠 Initializing AI Ensemble (ML + Advanced Strategies)...")
+                from src.core.ensemble_trader import EnsembleTrader
                 self.ensemble = EnsembleTrader(broker=None)
                 print("✅ AI Ensemble ready!")
                 return True
@@ -155,8 +161,9 @@ class LiveRithmicTrader:
             print(f"   Equity: ${acct.get('equity', 0):,.2f}")
             print(f"   Mode: ⚠️  LIVE - Real money at risk!")
             
-            # Initialize full AI ensemble
+            # Initialize full AI ensemble after env/symbol are set
             print("\n🧠 Initializing AI Ensemble (ML + Advanced Strategies)...")
+            from src.core.ensemble_trader import EnsembleTrader
             self.ensemble = EnsembleTrader(broker=self.broker)
             print("✅ AI Ensemble ready!")
             
@@ -686,7 +693,12 @@ def main():
     
     args = parser.parse_args()
     
+    os.environ['TRADING_PAIRS'] = args.symbol
+
     trader = LiveRithmicTrader(symbol=args.symbol, paper_mode=args.paper, skip_confirm=args.yes)
+    print(f"\n📌 Rithmic launcher: symbol={args.symbol}  "
+          f"ASSET_CLASS={os.environ.get('ASSET_CLASS')}  "
+          f"BROKER_TYPE={os.environ.get('BROKER_TYPE')}")
     
     if not trader.connect():
         print("\n❌ Could not connect to Rithmic")
