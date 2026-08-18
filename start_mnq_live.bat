@@ -46,13 +46,19 @@ if not exist ".env" (
 
 findstr /r /c:"^RITHMIC_USER_ID=." .env >nul
 if errorlevel 1 (
-    echo [ERROR] RITHMIC_USER_ID is empty in .env
-    echo         Open .env and set RITHMIC_USER_ID, RITHMIC_PASSWORD, RITHMIC_SYSTEM.
-    echo         Example: RITHMIC_SYSTEM=LucidTrading
+    echo [SETUP] RITHMIC_USER_ID is empty in .env
+    echo         Enter your TradeSea / Lucid Rithmic login.
     echo.
-    notepad .env
-    pause
-    exit /b 1
+    "%PY%" scripts\set_rithmic_env.py
+    if errorlevel 1 (
+        echo.
+        echo Could not save credentials. You can also run:
+        echo   notepad .env
+        echo and set RITHMIC_USER_ID, RITHMIC_PASSWORD, RITHMIC_SYSTEM=LucidTrading
+        pause
+        exit /b 1
+    )
+    echo.
 )
 
 echo This places REAL orders on MNQ. Press Ctrl+C to stop.
