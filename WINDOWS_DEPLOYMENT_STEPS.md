@@ -1,52 +1,81 @@
-# 🚀 Windows Deployment Steps for Enhanced Bot
+# Windows: clone and start the bot
 
-## Step 1: Resolve Git Conflict
+`C:\Users\shawa` is your Windows home folder. It is **not** the bot. If
+`cd C:\Users\shawa\Ai-bot` fails, the repo was never cloned on this PC.
+
+## First time (no `Ai-bot` folder yet)
+
+Install Git if `git` is not recognized, then clone:
+
 ```powershell
-# Navigate to your bot directory
+winget install --id Git.Git -e --source winget
+```
+
+Close PowerShell, open a new window, then:
+
+```powershell
+cd C:\Users\shawa
+git clone https://github.com/paraflix246-pixel/Ai-bot.git
+cd Ai-bot
+.\setup_windows.bat
+```
+
+GitHub may ask you to sign in. After setup, put Rithmic credentials in `.env`:
+
+```
+BROKER_TYPE=rithmic
+ASSET_CLASS=futures
+RITHMIC_USER_ID=your_user
+RITHMIC_PASSWORD=your_password
+RITHMIC_SYSTEM=LucidTrading
+```
+
+## Start MNQ live
+
+You must be inside the cloned folder:
+
+```powershell
 cd C:\Users\shawa\Ai-bot
-
-# Option A: Quick deployment (overwrites local logs/adaptive data)
-git stash
-git pull origin main
-
-# Option B: Keep your adaptive learning data
-git add data/adaptive_learning.json* logs/*.log  
-git commit -m "local: save current state before update"
-git pull origin main
+.\start_mnq_live.bat
 ```
 
-## Step 2: Start Enhanced Bot  
+Or:
+
 ```powershell
-# Correct PowerShell syntax (note the .\ prefix):
-.\run_bot_forever.bat
+cd C:\Users\shawa\Ai-bot
+.\venv\Scripts\python.exe -u start_live_rithmic.py --symbol MNQ
 ```
 
-## Step 3: Monitor for New Structure-Based Messages
-Watch your logs for these new messages:
+Paper mode (no live orders):
+
+```powershell
+cd C:\Users\shawa\Ai-bot
+.\venv\Scripts\python.exe -u start_live_rithmic.py --symbol MNQ --paper
 ```
-📍 Structure SL: swing low 1.10245 (tested 2x) + 0.2×ATR buffer
-🎯 Structure TP: resistance at 1.10456 (R:R = 1.5)
-🎯 S/R TP upgrade: 1.10456 → 1.10478 (resistance at 22p, R:R = 1.5) [5m]
+
+You can also double-click `start_mnq_live.bat` in File Explorer **inside** `Ai-bot`.
+
+## If you think you already downloaded it
+
+Search your user folder:
+
+```powershell
+Get-ChildItem C:\Users\shawa -Filter start_live_rithmic.py -Recurse -ErrorAction SilentlyContinue | Select-Object FullName
 ```
 
-## What Changed:
-✅ Stop losses now use actual swing highs/lows instead of arbitrary ATR
-✅ Take profits target real resistance/support levels  
-✅ 5m scalping capped at 1.8R for realism
-✅ Minimum 8 pip distance validation
-✅ Prioritizes levels that have been "tested" multiple times
+`cd` into the folder that contains that file, then run `.\start_mnq_live.bat` or the Python command above.
 
-## Expected Results:
-- Fewer stop-outs from market noise
-- Higher hit rates at technical levels
-- More realistic profit targets
-- Better overall win rate (backtested 56.1% vs old method)
+## Update an existing clone
 
-## Troubleshooting:
-- **Git conflict**: Use `git stash` then `git pull origin main`
-- **Batch file not found**: Use `.\run_bot_forever.bat` (note the `.\`)
-- **MetaTrader5 connection**: Ensure MT5 is open and logged in
-- **Relay server**: Check if MT5 relay server starts correctly
+```powershell
+cd C:\Users\shawa\Ai-bot
+git pull origin main
+```
 
----
-**Ready to deploy the enhanced structure-based trading strategy! 🎯⚡**
+## Troubleshooting
+
+- **Cannot find path `C:\Users\shawa\Ai-bot`**: run the clone steps above. `git pull` from `C:\Users\shawa` will also fail because that folder is not a git repo.
+- **`.\start_mnq_live.bat` not recognized**: you are not in the `Ai-bot` folder. PowerShell only looks in the current directory.
+- **`git` is not recognized**: install Git, then open a new PowerShell window.
+- **Clone authentication failed**: sign in to GitHub in the browser or use a personal access token.
+- **Rithmic connection failed**: fill `RITHMIC_*` in `.env` and confirm your Tradesea/Lucid session is active.

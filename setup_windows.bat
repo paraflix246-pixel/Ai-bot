@@ -69,12 +69,17 @@ if not exist ".env" (
     echo [SETUP] Creating .env from .env.example
     copy .env.example .env
     echo.
-    echo *** IMPORTANT: Edit .env with your MT5 credentials! ***
-    echo     Open .env in Notepad and fill in:
-    echo       - MT5_ACCOUNT
-    echo       - MT5_PASSWORD
-    echo       - MT5_SERVER
-    echo       - NEWSAPI_KEY
+    echo *** IMPORTANT: Edit .env before starting ***
+    echo.
+    echo     For MNQ live (Rithmic / Lucid / TradeSea) fill:
+    echo       BROKER_TYPE=rithmic
+    echo       ASSET_CLASS=futures
+    echo       RITHMIC_USER_ID=your_user
+    echo       RITHMIC_PASSWORD=your_password
+    echo       RITHMIC_SYSTEM=LucidTrading
+    echo.
+    echo     MT5_ACCOUNT / MT5_PASSWORD / NEWSAPI_KEY are only for forex MT5.
+    echo     You can leave those blank if you only trade MNQ.
     echo.
     notepad .env
 )
@@ -84,13 +89,11 @@ echo ====================================
 echo   Setup Complete!
 echo ====================================
 echo.
-echo Next steps:
-echo   1. Make sure MetaTrader 5 is open and logged in
-echo   2. Edit .env with your credentials (if not done)
-echo   3. Train the AI model:
-echo        python -m scripts.train_lstm
-echo   4. Start paper trading:
-echo        python -m scripts.run_bot
-echo   5. When ready for live trading, change TRADING_MODE=live in .env
+echo Next steps for MNQ live:
+echo   1. Save .env with RITHMIC_USER_ID, RITHMIC_PASSWORD, RITHMIC_SYSTEM
+echo   2. Start live MNQ:
+echo        start_mnq_live.bat
+echo   3. Or paper first (no live orders):
+echo        venv\Scripts\python.exe -u start_live_rithmic.py --symbol MNQ --paper
 echo.
 pause

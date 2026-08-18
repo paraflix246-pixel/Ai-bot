@@ -43,7 +43,11 @@ AUTOTRADING_ENABLED = TRADING_MODE == 'live'
 # Symbols to Trade — auto-selected by asset class
 FOREX_PAIRS = ['EUR/USD', 'GBP/USD', 'USD/JPY']
 FUTURES_SYMBOLS = ['MES', 'MNQ']  # Start with micros for eval
-PAIRS = FUTURES_SYMBOLS if ASSET_CLASS == 'futures' else FOREX_PAIRS
+_pairs_override = os.getenv('TRADING_PAIRS', '').strip()
+if _pairs_override:
+    PAIRS = [p.strip() for p in _pairs_override.split(',') if p.strip()]
+else:
+    PAIRS = FUTURES_SYMBOLS if ASSET_CLASS == 'futures' else FOREX_PAIRS
 
 # Timeframes (in minutes) — dual-timeframe scalping
 TIMEFRAMES = {
@@ -183,4 +187,7 @@ RL_EXPLORATION_TRADES = int(os.getenv('RL_EXPLORATION_TRADES', 0))  # 0 = exploi
 LSTM_MODEL_PATH = 'models/lstm_model.h5'
 SCALER_PATH = 'models/scaler.pkl'
 
-print(f"✅ Strategy Config Loaded - Mode: {TRADING_MODE}, Scalping 1M+5M, Pairs: {PAIRS}")
+print(
+    f"✅ Strategy Config Loaded - Mode: {TRADING_MODE}, "
+    f"Asset: {ASSET_CLASS}, Broker: {BROKER_TYPE}, Pairs: {PAIRS}"
+)

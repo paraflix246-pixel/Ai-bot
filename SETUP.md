@@ -43,8 +43,8 @@ A sophisticated **4-model ensemble AI trading bot** that automatically trades fo
 ### 2. Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/yourusername/Ai-bot.git
+# Clone repository (Windows PowerShell: run this from C:\Users\shawa)
+git clone https://github.com/paraflix246-pixel/Ai-bot.git
 cd Ai-bot
 
 # Install dependencies
