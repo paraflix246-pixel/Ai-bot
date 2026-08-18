@@ -15,10 +15,32 @@ git commit -m "local: save current state before update"
 git pull origin main
 ```
 
-## Step 2: Start Enhanced Bot  
+## Step 2: Start the Bot
+
+PowerShell only finds `.\something.bat` in the **current folder**. If you are in `C:\Users\shawa`, the file is not there.
+
 ```powershell
-# Correct PowerShell syntax (note the .\ prefix):
-.\run_bot_forever.bat
+# 1) Go into the bot repo (adjust the path if yours is different)
+cd C:\Users\shawa\Ai-bot
+
+# 2) Confirm the launcher is in this folder
+dir start_mnq_live.bat
+
+# 3) Start MNQ live (Rithmic, real money)
+.\start_mnq_live.bat
+```
+
+You can also double-click `start_mnq_live.bat` in File Explorer from the `Ai-bot` folder.
+
+**Other launchers in this folder:**
+- `.\start_mnq_live.bat` — live MNQ via Rithmic (`start_live_rithmic.py --symbol MNQ`)
+- `.\run_bot_forever.bat` — forex ensemble via MT5 relay (`start_live.py`), auto-restarts on crash
+
+Paper test first (no live orders):
+
+```powershell
+cd C:\Users\shawa\Ai-bot
+.\venv\Scripts\python.exe -u start_live_rithmic.py --symbol MNQ --paper
 ```
 
 ## Step 3: Monitor for New Structure-Based Messages
@@ -44,7 +66,7 @@ Watch your logs for these new messages:
 
 ## Troubleshooting:
 - **Git conflict**: Use `git stash` then `git pull origin main`
-- **Batch file not found**: Use `.\run_bot_forever.bat` (note the `.\`)
+- **Batch file not found**: You are not in the bot folder. Run `cd C:\Users\shawa\Ai-bot` then `.\start_mnq_live.bat` (the `.\` is required in PowerShell)
 - **MetaTrader5 connection**: Ensure MT5 is open and logged in
 - **Relay server**: Check if MT5 relay server starts correctly
 
