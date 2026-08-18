@@ -33,6 +33,23 @@ echo.
 echo Project: %cd%
 echo Python:  %PY%
 echo.
+if not exist ".env" (
+    echo [ERROR] No .env file. Run setup_windows.bat first, then fill Rithmic fields.
+    pause
+    exit /b 1
+)
+
+findstr /r /c:"^RITHMIC_USER_ID=." .env >nul
+if errorlevel 1 (
+    echo [ERROR] RITHMIC_USER_ID is empty in .env
+    echo         Open .env and set RITHMIC_USER_ID, RITHMIC_PASSWORD, RITHMIC_SYSTEM.
+    echo         Example: RITHMIC_SYSTEM=LucidTrading
+    echo.
+    notepad .env
+    pause
+    exit /b 1
+)
+
 echo This places REAL orders on MNQ. Press Ctrl+C to stop.
 echo.
 

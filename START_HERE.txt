@@ -21,12 +21,14 @@ You must clone the GitHub repo first. PowerShell errors like
 
    .\setup_windows.bat
 
-   Fill in .env (Rithmic for MNQ futures):
+   When Notepad opens .env, fill Rithmic (NOT MT5) for MNQ:
      BROKER_TYPE=rithmic
      ASSET_CLASS=futures
-     RITHMIC_USER_ID=...
-     RITHMIC_PASSWORD=...
-     RITHMIC_SYSTEM=...
+     RITHMIC_USER_ID=your_tradesea_user
+     RITHMIC_PASSWORD=your_password
+     RITHMIC_SYSTEM=LucidTrading
+
+   Save and close Notepad. Skip MT5_ACCOUNT / NEWSAPI_KEY unless you also trade forex.
 
 3) Start MNQ live (real orders):
 
